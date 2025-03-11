@@ -13,7 +13,7 @@ pub fn salt_insertation(mut vector_bytes: Vec<u8>) -> Vec<u8> {
     
     let salt = salt.trim();
 
-    store_to_file(&salt, "salt");
+    store_to_file(&salt, "salt").expect("Failed to store to file");
 
     let salt_bytes: &[u8] = salt.as_bytes();
     let mut salt_bytes_vector: Vec<u8> = Vec::new();
@@ -39,7 +39,7 @@ pub fn store_to_file(salt_string: &str, name: &str) -> io::Result<()> {
 }
 
 //Performs the main cyphering operations. Outputs a vector.
-pub fn skyler_cypher(input_str: &str) -> Vec<String> {
+pub fn skyler_cypher(input_str: &str) -> String {
 
     let input_str_bytes: &[u8] = input_str.as_bytes();
     let mut bytes_vector: Vec<u8> = Vec::new();
@@ -75,20 +75,20 @@ pub fn skyler_cypher(input_str: &str) -> Vec<String> {
         .collect::<Vec<String>>()
         .join(" ");
 
-    store_to_file(&bytes_string, "ciphered_vector");
+    store_to_file(&bytes_string, "ciphered_string").expect("Failed to store to file");
 
-    return bytes_vector;
+    return bytes_string;
 }
 
 //Converts each decimal ASCII value into a hexadecimal value.
-pub fn convert_to_hex(mut decimal_vector: Vec<u8>) -> Vec<String> {
+pub fn convert_to_hex(decimal_vector: Vec<u8>) -> Vec<String> {
     
     return decimal_vector.iter()
         .map(|byte| format!("{:02x}", byte)).collect();
 }
 
 //Reverses the elements of a vector and returns a vector.
-pub fn reverse_vector(mut input_vector: Vec<String>) -> Vec<String> {
+pub fn reverse_vector(input_vector: Vec<String>) -> Vec<String> {
     let input_vector: Vec<String> = input_vector
         .into_iter().rev().collect();
 
