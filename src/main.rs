@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{self, Write};
 
 //Inserts an ASCII salt into the cyphered vector.
-pub fn salt_insertation(mut vector_bytes: Vec<u8>) -> Vec<u8> {
+pub fn salt_insertion(mut vector_bytes: Vec<u8>) -> Vec<u8> {
     println!("Enter the salt to be added in plaintext.");
     let mut salt = String::new();
 
@@ -38,7 +38,7 @@ pub fn store_to_file(salt_string: &str, name: &str) -> io::Result<()> {
     Ok(())
 }
 
-//Performs the main cyphering operations. Outputs a vector.
+//Performs the main cyphering operations. Outputs a string.
 pub fn skyler_cypher(input_str: &str) -> String {
 
     let input_str_bytes: &[u8] = input_str.as_bytes();
@@ -59,7 +59,7 @@ pub fn skyler_cypher(input_str: &str) -> String {
         *element = ( (parsed_temp % 95) + 32 ) as u8;
     }
 
-    let bytes_vector: Vec<u8> = salt_insertation(bytes_vector);
+    let bytes_vector: Vec<u8> = salt_insertion(bytes_vector);
     
     println!("{:?}", bytes_vector);
     
