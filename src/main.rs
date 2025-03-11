@@ -13,7 +13,7 @@ pub fn salt_insertation(mut vector_bytes: Vec<u8>) -> Vec<u8> {
     
     let salt = salt.trim();
 
-    store_to_file(&salt);
+    store_to_file(&salt, "salt");
 
     let salt_bytes: &[u8] = salt.as_bytes();
     let mut salt_bytes_vector: Vec<u8> = Vec::new();
@@ -29,15 +29,17 @@ pub fn salt_insertation(mut vector_bytes: Vec<u8>) -> Vec<u8> {
 }
 
 //Stores the salt string to a .txt file.
-pub fn store_to_file(salt_string: &str) -> io::Result<()> {
-    let mut file = File::create("salt")?;
+pub fn store_to_file(salt_string: &str, name: &str) -> io::Result<()> {
+    let file_name = format!("{}", name);
+
+    let mut file = File::create(&file_name)?;
 
     file.write_all(salt_string.as_bytes())?;
     Ok(())
 }
 
 //Performs the main cyphering operations. Outputs a vector.
-pub fn skyler_cypher(input_str: &str) -> Vec<u8> {
+pub fn skyler_cypher(input_str: &str) -> Vec<String> {
 
     let input_str_bytes: &[u8] = input_str.as_bytes();
     let mut bytes_vector: Vec<u8> = Vec::new();
@@ -57,9 +59,40 @@ pub fn skyler_cypher(input_str: &str) -> Vec<u8> {
         *element = ( (parsed_temp % 95) + 32 ) as u8;
     }
 
-    let bytes_vector: Vec<u8> = salt_insertation(bytes_vector.clone());
+    let bytes_vector: Vec<u8> = salt_insertation(bytes_vector);
+    
+    println!("{:?}", bytes_vector);
+    
+    let bytes_vector: Vec<String> = convert_to_hex(bytes_vector);
+
+    println!("{:?}", bytes_vector);
+
+    let bytes_vector: Vec<String> = reverse_vector(bytes_vector);
+
+    let bytes_string = bytes_vector
+        .iter()
+        .map(|n| n.to_string())
+        .collect::<Vec<String>>()
+        .join(" ");
+
+    store_to_file(&bytes_string, "ciphered_vector");
 
     return bytes_vector;
+}
+
+//Converts each decimal ASCII value into a hexadecimal value.
+pub fn convert_to_hex(mut decimal_vector: Vec<u8>) -> Vec<String> {
+    
+    return decimal_vector.iter()
+        .map(|byte| format!("{:02x}", byte)).collect();
+}
+
+//Reverses the elements of a vector and returns a vector.
+pub fn reverse_vector(mut input_vector: Vec<String>) -> Vec<String> {
+    let input_vector: Vec<String> = input_vector
+        .into_iter().rev().collect();
+
+    return input_vector;
 }
 
 fn main() -> io::Result<()> {
