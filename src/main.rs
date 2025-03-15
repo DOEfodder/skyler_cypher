@@ -13,9 +13,10 @@ pub fn salt_insertion(mut vector_bytes: Vec<u8>) -> Vec<u8> {
     
     let salt = salt.trim();
 
-    store_to_file(&salt, "salt").expect("Failed to store to file");
+    store_to_file(&salt, "salt").expect("Failed to store salt to file.");
 
     let salt_bytes: &[u8] = salt.as_bytes();
+
     let mut salt_bytes_vector: Vec<u8> = Vec::new();
 
     for &byte in salt_bytes {
